@@ -34,45 +34,79 @@ GPU Compiler Optimizations
 
 \section{Introduction}
 
+	% Limit Topic
+		% Limited to CUDA 
+			% Partition Camping is an effect from Nvidia			
+		% Only Compiler Optimization 
+		% No Optimization on Run Time
+	
+
 \section{Background}
 
-\subsection{General Purpose GPUs}
-
-% Explanation, why GPGPU is interessting
-% Advantages, Disadvantages of GPGPU
-
-\subsection{NVIDIA CUDA}
-
-% Explanation
-% Information about CUDA Modell
-
-\subsection{Memory Seperation in CUDA}
-
-% Explanation about the six different memory types.
-% Categorization with Size, Availability, Speed, Access Time 
+	\subsection{General Purpose GPUs}
+	
+		% Explanation, why GPGPU is interessting
+			% Multithreading
+		% Advantages, Disadvantages of GPGPU
+		
+	\subsection{NVIDIA CUDA}
+		
+		% Explanation
+		% Information about CUDA Modell
+	
+	\subsection{Memory Seperation in CUDA}
+		
+		% Explanation about the six different memory types.
+		% Categorization with Size, Availability, Speed, Access Time 
 
 \section{Body}
 
-\subsection{Thread-Block Merging}
-
-% General Explanation 
-
-\subsection{Thread Merging}
-
-% General Explanation 
-% Difference to Thread Block Merging
-
-\subsection{Data Prefetching}
+	% Introduction
+	% Why do we want to optimize Memory Access
+	% Why do we want to do it automagically
+	
+	% Each Optimization should get at least two sentences, which should outline those categories.
+	% Categories
+		% Use Cases (special or general)
+		% Efficiency
+		% Difficulty
+		% Error Case
+	
+	\subsection{Thread-Block Merging}
+		
+		% General Explanation 
+		% Graphic for Explanation
+	
+	\subsection{Thread Merging}
+		
+		% General Explanation 
+		% Difference to Thread Block Merging
+		% Graphic for Explanation
+		
+	\subsection{Data Prefetching}
+		
+		% General Explanation
+		
+	\subsection{Partition Camping}
+		
+		% General Explanation
+		% Graphics
+			% Not that easy to understand
 
 \section{Evaluation}
-
-\subsection{Thread-Block Merging}
-
-\subsection{Thread Merging}
-
-\subsection{Data Prefetching}
+	
+	% No Idea
 
 \section{Discussion}
+
+	% Go through Categories and categorize every Optimization for every Category and explain why.
+	% Categories
+		% Use Cases (special or general)
+		% Efficiency
+		% Difficulty
+			% Code Examples (?)
+		% Error Case
+
 
 \section{Related Work}
 
@@ -84,4 +118,4 @@ GPU Compiler Optimizations
 \end{thebibliography}
 
 \end{document}
-\grid
+
