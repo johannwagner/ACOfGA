@@ -34,30 +34,59 @@ GPU Compiler Optimizations
 
 \section{Introduction}
 
-	% Limit Topic
-		% Limited to CUDA 
-			% Partition Camping is an effect from Nvidia			
-		% Only Compiler Optimization 
-		% No Optimization on Run Time
+	% What is the problem?
+		% Complex Calculations, that does not share much data and can be multithreaded.
+		% Processing with GPU for Acceleration
+		% Optimization is quite basic for GPGPU Compiler at the moment.
+
+	% Why is it interesting and important?
+		% Speed up GPGPU code
+		% Programming GPU is more complex as CPU Programming
+			% Multithreading 
+			% 6 Different Memory Types
+			% Hard to write performant code
+			
+	% Why is it hard? (E.g., why do naive approaches fail?)
+		% ?
+	% Why hasn't it been solved before? (Or, what's wrong with previous proposed solutions? How does mine differ?)
+		% No qualitative comparisions between different GPU Optimizations 
+	% What are the key components of my approach and results? Also include any specific limitations.
+		% Optimization for Memory Access Times
+		% Only Compiler Optimization
+
 	
 
 \section{Background}
 
-	\subsection{General Purpose GPUs}
+	\subsection{General Purpose Computation on GPUs}
 	
 		% Explanation, why GPGPU is interessting
 			% Multithreading
 		% Advantages, Disadvantages of GPGPU
-		
+			% Transfer
+			% Complexity
+			% Speed
+			% Threads
+			
 	\subsection{NVIDIA CUDA}
 		
-		% Explanation
-		% Information about CUDA Modell
+		% General Explanation
+			% CUDA is a parallel computing platform and programming model developed by NVIDIA for general computing on graphical processing units (GPUs). With CUDA, developers are able to dramatically speed up computing applications by harnessing the power of GPUs.
+		% Advantages of CUDA 
 	
 	\subsection{Memory Seperation in CUDA}
 		
 		% Explanation about the six different memory types.
 		% Categorization with Size, Availability, Speed, Access Time 
+		
+		% Register
+		% Local Memory
+		% Shared Memory
+		% Global Memory
+		% Constant Memory
+		% Texture Memory
+		
+		
 
 \section{Body}
 
@@ -65,12 +94,7 @@ GPU Compiler Optimizations
 	% Why do we want to optimize Memory Access
 	% Why do we want to do it automagically
 	
-	% Each Optimization should get at least two sentences, which should outline those categories.
-	% Categories
-		% Use Cases (special or general)
-		% Efficiency
-		% Difficulty
-		% Error Case
+
 	
 	\subsection{Thread-Block Merging}
 		
@@ -94,20 +118,16 @@ GPU Compiler Optimizations
 			% Not that easy to understand
 
 \section{Evaluation}
-	
-	% No Idea
-
-\section{Discussion}
 
 	% Go through Categories and categorize every Optimization for every Category and explain why.
-	% Categories
+		% Categories
 		% Use Cases (special or general)
 		% Efficiency
 		% Difficulty
-			% Code Examples (?)
+		% Code Examples (?)
 		% Error Case
-
-
+	
+	
 \section{Related Work}
 
 \section{Conclusion}
