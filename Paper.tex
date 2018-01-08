@@ -359,11 +359,16 @@ GPU Compiler Optimizations
 	
 \section{Related Work}
 
+	Yi Yang et. al. wrote a paper on "A GPGPU Compiler for Memory Optimization Parallelism Management" which explains how to implement the optimizations presented in this paper. Further optimizations are also presented and these optimizations are tested using examples such as matrix multiplication with large matrices \cite{GPGPUCompiler}.
+	
+	Ashwin M. Aji et al. wrote an article on "Bounding the Effect of Partition Camping in GPU Kernels", which explains the effect of Partition Camping in more detail. It also explains the different patterns that can be used to avoid partition camping, which have been omitted in this paper for reasons of simplicity \cite{pc}.  
+	
+	This paper optimizes access to shared storage areas.  Greg Ruetsch et. al. from NVIDIA have carried out several optimizations using the example of matrix multiplication. An optimization was that the data is stored in such a way that no conflicts occur, which is a further development and/or modification of the partition camping solution \cite{mtransnvidia}.
+	
 \section{Conclusion}
 	
 
 \begin{thebibliography}{00}
-\bibitem{b1} G. Eason, B. Noble, and I. N. Sneddon, ``On certain integrals of Lipschitz-Hankel type involving products of Bessel functions,'' Phil. Trans. Roy. Soc. London, vol. A247, pp. 529--551, April 1955.
 \bibitem{nvc} CUDA Zone - https://developer.nvidia.com/cuda-zone
 \bibitem{GPGPUCompiler} Yi Yang, Ping Xiang, Jingfei Kong, Huiyang Zhou, "A GPGPU Compiler for Memory Optimization and Parallelism Management", 2010
 \bibitem{myth} Victor W Lee, Changkyu Kim, Jatin Chhugani et. al "Debunking the 100X GPU vs. CPU Myth: An Evaluation of Throughput Computing on CPU and GPU", 2010
@@ -376,6 +381,8 @@ https://international.download.nvidia.com/geforce-com/international/pdfs/GeForce
 Complexity
 \bibitem{accsql} Peter Bakkum, Kevin Skadron, "Accelerating SQL Database Operations on a GPU with CUDA", 2010
 \bibitem{pc} Ashwin M. Aji, Mayank Daga, Wu-chun Feng, "Bounding the Effect of Partition Camping in GPU Kernels", 2011
+\bibitem{mtransnvidia} Greg Ruetsch, Paulius Micikevicius, "Optimizing Matrix Transpose in CUDA", 2009 
+
 
 
 \end{thebibliography}
