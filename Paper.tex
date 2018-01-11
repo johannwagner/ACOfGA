@@ -8,7 +8,11 @@
 \usepackage{textcomp}
 \def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
     T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+
+	
+
 \begin{document}
+
 
 \title{Automatic Code Optimizations on GPU Architectures}
 
@@ -48,16 +52,16 @@ GPU Compiler Optimizations
 
 	General Purpose Computation on Graphics Processing Unit (GPGPU) is a frequently used term in data processing. Due to this, complex calculations can be accelerated by using GPU instead of CPU.
 	
-	Todays compilers for CPU architectures are optimized a lot. There are many generally known optimizations like loop unrolling and constant precalcuation. The aim is to avoid problems of CPUs, such as costly instructions like jump- and division-operations \cite{gccoptimizations}.
+	Todays compilers for CPU architectures are optimized a lot. There are many generally known optimizations like loop unrolling and constant precalcuation. The aim is to avoid problems of CPUs, such as costly instructions like jump- and division-operations \cite{gcc_optimize_options}.
 	
-	Loop unrolling tries to get rid of jump-operations, that in the best case accelerates the assembler code by unrolling a loop to procedural code without jump-operations \cite{gccoptimizations}. Constant precalcuation tries to evaluate a formula as best as possible without known variables \cite{gccoptimizations}.
+	Loop unrolling tries to get rid of jump-operations, that in the best case accelerates the assembler code by unrolling a loop to procedural code without jump-operations. Constant precalcuation tries to evaluate a formula as best as possible without non-constant variables, which are unknown at compile time \cite{gcc_optimize_options}.
 	
 	In general, these optimizations try to avoid cost-intensive operations. These are either avoided or calculated at compile time, so that the actual program runs faster. 
 	
-	Compilers, which are used to create GPGPU applications, have to help the developer more than conventional CPU applications. The main problem with GPGPU applications is memory access. NVIDIA introduces CUDA, a programming model that allows developers to run code on graphics cards, but CUDA introduces six different types of memory, all of which have to be managed by the programmer, which is much more than traditional programming. In addition, this memory access is slow in case of incorrect handling \cite{nvc} \cite{cudap}.
+	Compilers, which are used to create GPGPU applications, have to help the developer more than conventional CPU compilers like GCC and clang. The main problem with GPGPU applications is memory access \cite{harris2007optimizing}. NVIDIA introduces CUDA, a programming model that allows developers to run code on graphics cards, but CUDA introduces six different types of memory, all of which have to be managed by the programmer, which is much more than in traditional programming. In addition, this memory access gets slow in case of incorrect handling \cite{nvidia_cuda} \cite{nvidia_developer_documentation}.
 	
 	Obviously, other problems have to be solved than with CPU applications. In GPGPU applications, memory access to global memory is the main problem and a problem that can be solved in different ways.
-	Therefore, we would like to discuss here what optimizations already exist for the GPU \cite{nvc} \cite{cudap}.
+	Therefore, we would like to discuss here what optimizations already exist for the GPU \cite{nvidia_cuda} \cite{nvidia_developer_documentation}.
 	
 	% Why is it interesting and important?
 		% Speed up GPGPU code
@@ -85,15 +89,15 @@ GPU Compiler Optimizations
 	\subsection{Threads and Thread Blocks}
 	
 	\subsubsection{Threads}
-	Threads are subroutines, so a small set of instructions, which can be managed and executed independently from other threads. Threads typically have an independent stack for local variables and share heap with all other threads. Due to access from multiple independent threads, heap access must be managed  \cite{threadDefinition}.
+	Threads are subroutines, so a small set of instructions, which can be managed and executed independently from other threads. Threads typically have an independent stack for local variables and share heap with all other threads. Due to access from multiple independent threads, heap access must be managed  \cite{lamport1979make}.
 	
 	
 	\subsubsection{Thread Blocks}
-	Thread Blocks is a construct, which was introduced by CUDA to organize threads in groups. Threads, that are grouped in a thread block, can access a part of the storage simultaneously \cite{cudap}.
+	Thread Blocks is a construct, which was introduced by CUDA to organize threads in groups. Threads, that are grouped in a thread block, can access a part of the storage simultaneously \cite{nvidia_developer_documentation}.
 	
 	\subsubsection{Hardware Implementation}
 	NVIDIA GTX 1080 has 20 multiprocessors with 128 threads each. This means that the threads of 20 thread blocks can be executed simultaneously. If there are more than 20 thread blocks, they are executed one after the other.
-	That means, that 2560 threads can be executed in parallel \cite{1080gtxdepth}.
+	That means, that 2560 threads can be executed in parallel \cite{nvidia_gtx_1080_whitepaper}.
 	
 	
 	
@@ -104,7 +108,7 @@ GPU Compiler Optimizations
 		% TODO
 		
 		% Intro with Point - I tried
-		Big Computations need a lot of calculation time. Those computations can be mostly splitted into multiple smaller workloads, which can be calculated independently \cite{GPGPUCompiler}. While CPUs are designed to calculate bigger workloads with less threads, GPUs are designed to calculate smaller workloads on hundreds of threads. In its original form, each pixel could be calculated individually on a GPU, which implies heavy multi threading \cite{myth}.
+		Big Computations need a lot of calculation time. Those computations can be mostly splitted into multiple smaller workloads, which can be calculated independently \cite{yang2010gpgpu}. While CPUs are designed to calculate bigger workloads with less threads, GPUs are designed to calculate smaller workloads on hundreds of threads. In its original form, each pixel could be calculated individually on a GPU, which implies heavy multi threading \cite{lee2010debunking}.
 		
 		% Punchline 
 		
@@ -112,15 +116,15 @@ GPU Compiler Optimizations
 		
 		There are some advantages and disadvantages of GPGPU usage:
 		
-		\subsubsection{Threading} A problem usually contains multiple smaller workloads, that can be calculated independently on GPUs. This calculations can be processed parallel to save time. Modern GPUs have more than 2500 cores with up to 1.7 GHz, which can execute code parallel. Other papers determine speedups up to 20 times \cite{1080gtx} \cite{speedup}.
+		\subsubsection{Threading} A problem usually contains multiple smaller workloads, that can be calculated independently on GPUs. This calculations can be processed parallel to save time. Modern GPUs have more than 2500 cores with up to 1.7 GHz, which can execute code parallel. Other papers determine speedups up to 20 times \cite{nvidia_gtx_1080}.
 		
 		
 		\subsubsection{Data Transfer Time}  Transferring data from memory into GPU memory is usually a bottleneck. Calculations, which use data from secondary storage or produce a lot of data, have to transfer data to the host system, that moves the data to CPU memory or on secondary storage.
 		
-		The problem here is the PCIe connection, which is currently specified with a maximum data rate of 32 GB per second. Thus it takes at least 250ms to fill the entire memory of a current graphics card, which is relatively slow in the context of fast calculations \cite{1080gtx} \cite{transferspeedup}.
+		The problem here is the PCIe connection, which is currently specified with a maximum data rate of 32 GB per second. Thus it takes at least 250ms to fill the entire memory of a current graphics card, which is relatively slow in the context of fast calculations \cite{nvidia_gtx_1080}.
 		
 		
-		\subsubsection{Complexity} Complexity is a big difficulty. The greater the degree of complexity, the more difficult and slower the development process.  Especially when programming GPUs, the complexity is high and the quality of the programming is decisive for the speed of the application. However, code is often not optimized when the consumer can cope with the waiting time, because the development of accelerated solutions would cost a lot of money \cite{cudalite}.
+		\subsubsection{Complexity} Complexity is a big difficulty. The greater the degree of complexity, the more difficult and slower the development process.  Especially when programming GPUs, the complexity is high and the quality of the programming is decisive for the speed of the application. However, code is often not optimized when the consumer can cope with the waiting time, because the development of accelerated solutions would cost a lot of money \cite{ueng2008cuda}.
 		
 		% Explanation, why GPGPU is interessting
 			% Multithreading
@@ -133,46 +137,54 @@ GPU Compiler Optimizations
 		% Conclusion - One Punch Line
 			
 	\subsection{NVIDIA CUDA}
+
 		
-		NVIDIA CUDA is a parallel computing platform and model, which was developed by NVIDIA to speed up applications by usage of NVIDIA GPUs. For example CUDA can be plugged as library into C programs to make use of a CUDA-capable GPU \cite{cudacpp}.
+		
+		NVIDIA CUDA is a parallel computing platform and model, which was developed by NVIDIA to speed up applications by usage of NVIDIA GPUs. For example CUDA can be plugged as library into C programs to make use of a CUDA-capable GPU .
 		
 		NVIDIA CUDA, further referred as CUDA, makes it easy to access GPU for general purpose programming by providing functions for different programming languages like C, C++ and Python. It provides simple functions and/or annotations to enable GPU usage. 
 	
+			
+		\begin{figure}[htbp] 
+			\begin{align*}
+			\begin{pmatrix}
+			c_{1} \\
+			c_{2} \\
+			\vdots \\
+			c_{m}
+			\end{pmatrix} 
+			= 
+			\begin{pmatrix}
+			a_{1} \\
+			a_{2} \\
+			\vdots \\
+			a_{m}
+			\end{pmatrix}
+			+ 
+			\begin{pmatrix}
+			b_{1} \\
+			b_{2} \\
+			\vdots \\
+			b_{m}
+			\end{pmatrix}			
+			\end{align*}
+			\caption{Mathematical Equation for Vector Addition}
+		\end{figure}
+	
+		
+	
+		% Explain Figure 1 with Figure 2
+		
+		Figure 1 shows a simple mathematical vector addition with an $m$-dimensional vector. Each $c_i$ can be calculated with the values of $a_i$ and $b_i$. This can be done in parallel relatively easily. Matrix multiplications with considerably larger dimensions can be calculated with a similar approach on the graphics card, which is already used today.
+		
+		For this purpose, we show in Figure 2 code which can perform this calculation on the graphics card with the help of CUDA. For this purpose, a kernel function is defined which has nothing to do with the kernel of an operating system, which is then executed with $N$ different threads. This function calculates a single $c_i$ each, which can be called in parallel without any problems, so that all $c_i$ can be calculated in parallel.
+
 		\begin{figure}[htbp]
 			\centerline{\includegraphics[width=0.4\textwidth]{CudaCode.png}}
 			\caption{Code with CUDA Support to add two vectors, accelerated with GPU - Taken from NVIDIA Programming Guide}
 			\label{fig}
 		\end{figure}
-
 	
-		% Explain Figure 1 with Figure 2
-		
-		In Figure 1, we show a simple vector addition, that is accelerated by using GPU with CUDA. You have to define a kernel function, which is a simple c function, which is called $N$ times by $N$ different CUDA threads. This kernel function is executed on GPU. \texttt{threadIdx.x} contains, in this simple example, just the number (\texttt{ 0 $\leq$ threadIdx.x $<$ N}) of the thread, which called the function. In Figure 2, we show the mathematical equation, which is done by the code in Figure 1. We can calculate every $c_i$ independently in sepeate threads, which makes it possible to speed up the process. This example is trivial, however matrix operations, that are more complex, can be speed up with the same approach \cite{cudap}.
-		\begin{figure}[htbp] 
-			\begin{align*}
-				\begin{pmatrix}
-				c_{1} \\
-				c_{2} \\
-				\vdots \\
-				c_{m}
-				\end{pmatrix} 
-				= 
-				\begin{pmatrix}
-				a_{1} \\
-				a_{2} \\
-				\vdots \\
-				a_{m}
-				\end{pmatrix}
-				+ 
-				\begin{pmatrix}
-				b_{1} \\
-				b_{2} \\
-				\vdots \\
-				b_{m}
-				\end{pmatrix}			
-			\end{align*}
-			\caption{Mathematical Equation for Vector Addition}
-		\end{figure}
 		
 		% General Explanation
 			% CUDA is a parallel computing platform and programming model developed by NVIDIA for general computing on graphical processing units (GPUs). With CUDA, developers are able to dramatically speed up computing applications by harnessing the power of GPUs.
@@ -185,17 +197,17 @@ GPU Compiler Optimizations
 		NVIDIA CUDA introduces six different types of memory, which are up to four more types than in other programming languages. Different types of memory has different attributes.
 
 		\subsubsection{Register}
-			Register Memory is quite similar to CPU Register Memory and is used as storage for local variables, etc. It is limited to 16kb and everything, which exceeds this limit, will be pushed on Local Memory \cite{accsql}.
+			Register Memory is quite similar to CPU Register Memory and is used as storage for local variables, etc. It is limited to 16kb and everything, which exceeds this limit, will be pushed on Local Memory \cite{bakkum2010accelerating}.
 		\subsubsection{Local Memory}
-			Local Memory is an abstraction of CUDA, which makes it possible to store information in Global Memory, which is only available from current thread \cite{accsql}.
+			Local Memory is an abstraction of CUDA, which makes it possible to store information in Global Memory, which is only available from current thread \cite{bakkum2010accelerating}.
 		\subsubsection{Shared Memory}
-			Shared Memory is much faster than the Global Memory. It is visible to all threads, which are in the same thread block. It is intented to share data across multiple threads, that are in the same thread block \cite{cudalite} \cite{cudap}.
+			Shared Memory is much faster than the Global Memory. It is visible to all threads, which are in the same thread block. It is intented to share data across multiple threads, that are in the same thread block  \cite{nvidia_developer_documentation} \cite{ueng2008cuda}.
 		\subsubsection{Global Memory}
-			Global Memory is the slowest memory. It is visible to all threads, can be read and written from all threads and can be as General Purpose memory. It is very similar to CPU memory, which makes it easy to use to share data across multiple thread blocks \cite{cudalite}.
+			Global Memory is the slowest memory. It is visible to all threads, can be read and written from all threads and can be as General Purpose memory. It is very similar to CPU memory, which makes it easy to use to share data across multiple thread blocks \cite{ueng2008cuda}.
 		\subsubsection{Constant Memory}
-			Constant Memory is quite similar to the Global Memory, but can only be read. It can help to reduce overhead by caching information \cite{cudalite} \cite{accsql}.
+			Constant Memory is quite similar to the Global Memory, but can only be read. It can help to reduce overhead by caching information \cite{ueng2008cuda} \cite{bakkum2010accelerating}.
 		\subsubsection{Texture Memory}
-			Texture Memory is quite similar to the Global Memory, but can only be read. It provides some caching methods, which can be used to accelerate certain applications, but this is not used in the further explanations \cite{cudap}.
+			Texture Memory is quite similar to the Global Memory, but can only be read. It provides some caching methods, which can be used to accelerate certain applications, but this is not used in the further explanations \cite{nvidia_developer_documentation}.
 		
 		
 		% Explanation about the six different memory types.
@@ -210,7 +222,7 @@ GPU Compiler Optimizations
 		
 
 
-\section{Body}
+\section{Optimizations}
 
 	Waiting for Memory is one of the most time-consuming states in executing a program. Compared to CPU programming time can be saved in GPU programming by utilizing different memory types, which were introduced in the prior section. Fundamentally data, that is created and used by GPU threads, could be read and written in the global memory. This native approach would be slow, because only one thread could use the data at a time.
 	
@@ -233,7 +245,7 @@ GPU Compiler Optimizations
 	
 	% General Explanation 
 	
-	Thread Blocks have a shared memory segment, where they can save data for execution. If multiple thread blocks use the same data from the global memory to execute its threads, we can merge them into one thread block to reduce the memory access for global memory \cite{GPGPUCompiler}.
+	Thread Blocks have a shared memory segment, where they can save data for execution. If multiple thread blocks use the same data from the global memory to execute its threads, we can merge them into one thread block to reduce the memory access for global memory \cite{yang2010gpgpu}.
 	
 	% Graphic for Explanation
 	
@@ -254,7 +266,7 @@ GPU Compiler Optimizations
 	% General Explanation 
 		
 
-	The goal of thread merging is to reuse data. In the best case, each block of data has to be fetched only once. In addition to thread block merging, which only allows for the reuse of Shared Data Segments, thread merging allows the reuse of shared registers too \cite{GPGPUCompiler}. 
+	The goal of thread merging is to reuse data. In the best case, each block of data has to be fetched only once. In addition to thread block merging, which only allows for the reuse of Shared Data Segments, thread merging allows the reuse of shared registers too \cite{yang2010gpgpu}. 
 	
 	% Graphic for Explanation
 	
@@ -276,7 +288,7 @@ GPU Compiler Optimizations
 		
 		% General Explanation
 		
-		Data prefetching optimizes the iteration over data structures by prefetching the data, that is needed in the following iteration step. In the current iteration step $i$ the data from iteration step $i+1$ gets fetched. This step allows you to overlap memory access time and computing time \cite{GPGPUCompiler}. In exchange the actual iteration step become slower by adding some extra instructions for prefetching.
+		Data prefetching optimizes the iteration over data structures by prefetching the data, that is needed in the following iteration step. In the current iteration step $i$ the data from iteration step $i+1$ gets fetched. This step allows you to overlap memory access time and computing time \cite{yang2010gpgpu}. In exchange the actual iteration step become slower by adding some extra instructions for prefetching.
 		
 		In Figure 5, we show example code with data prefetching. The code is part of the code for matrix multiplication. To understand the concept the $tmp$ variable is important. In the beginning $tmp$ holds the first part of data. In the following iteration steps it requests the part of data, that is used in the following step. That is an asynchronous event, that run next to the calculations of the current iteration step. 
 		
@@ -302,9 +314,9 @@ GPU Compiler Optimizations
 		
 		% General Explanation
 		
-		The global memory of graphics cards is divided into partitions. Partitions can only be read or written by one thread at a time. If several threads want to access a partition at the same time, a queue is created and the threads cannot calculate any further. If all parts of the data set are located on a few partitions, then many threads need to access one partition, so memory access is slower. This is called partition camping \cite{pc} \cite{GPGPUCompiler}.
+		The global memory of graphics cards is divided into partitions. Partitions can only be read or written by one thread at a time. If several threads want to access a partition at the same time, a queue is created and the threads cannot calculate any further. If all parts of the data set are located on a few partitions, then many threads need to access one partition, so memory access is slower. This is called partition camping  \cite{yang2010gpgpu} \cite{aji2011bounding}.
 		
-		If the data is evenly distributed across all available partitions, a single partition has fewer threads to access, which speeds up memory access. However, please note that data can only be efficiently redistributed if there is enough space and a good structure of the data.  In addition, it can happen that redistribution makes the code faster in one place, but decelerates other places where the data is used in a different way \cite{pc} \cite{GPGPUCompiler}.
+		If the data is evenly distributed across all available partitions, a single partition has fewer threads to access, which speeds up memory access. However, please note that data can only be efficiently redistributed if there is enough space and a good structure of the data.  In addition, it can happen that redistribution makes the code faster in one place, but decelerates other places where the data is used in a different way \cite{yang2010gpgpu} \cite{aji2011bounding}.
 		
 		% Graphics
 			% Not that easy to understand
@@ -335,19 +347,22 @@ GPU Compiler Optimizations
 	
 	In this section we compare the different optimizations for GPGPU, which we have explained before. In doing so, we will look at various points such as use cases, efficiency, difficulty and error cases. Note that all optimizations occur at compile time and do not mean any additional work for the developer of the application.
 	
-	\begin{figure}[htbp]
-		\centerline{
+	In Table 1 we show a summary overview of the optimizations and categories according to which we can evaluate the different optimizations. The minus describes a negative characteristic, the circle a neutral characteristic and the plus a positive characteristic. Further explanations of the classifications will follow in the next sub chapters.
+	
+	\begin{table}[htbp]
+		\centering
+		
 			\begin{tabular}{ c | c | c | c | c }
 				Optimization & UC & E & D & EC \\ \hline
-				Thread Block Merge & - & + & - & \\
-				Thread Merge & - & + & - & \\
-				Data Prefetching & + & - & + & \\
-				Eliminiation of Partition Camping & + & o & + & \\
+				Thread Block Merge & - & + & - & o\\
+				Thread Merge & - & + & - & -\\
+				Data Prefetching & + & - & + & + \\
+				Eliminiation of Partition Camping & + & o & + & o\\
 			\end{tabular}
-		}
+		
 		\caption{Comparison of different optimizations - Use Cases (UC), Efficiency (E), Difficulty (D), Error Cases (EC)}
-		\label{figtable}
-	\end{figure}
+		\label{tab:table}
+	\end{table}
 	
 	
 	\subsection{Use Cases}
@@ -382,38 +397,40 @@ GPU Compiler Optimizations
 	
 	\subsection{Error Cases}
 	
+		All previous work does not contain any information about the error case. An error case is characterized by an applied optimization which slows down the program execution or raises the global memory access.
+		
+		Data prefetching is relatively simple to use in the application and performs only one additional load operation, which copies memory from the global memory to the local memory. If data is loaded at this point that is no longer needed, the access times to the global memory for other threads increase unnecessarily, but the execution of the current thread is slowed down only marginally, since the load operation is executed in parallel and does not block the process flow of the thread as long as the data is not required.
+		
+		The redistribution of data during the elimination of partition camping has more problems if used incorrectly. Two variants must be considered.
+		In extreme cases, where all data is correct, the performance gain can be reversed if the data is redistributed. 
+		In a mixed case, where some data is stored unfavourably, it can lead to slight performance changes due to incorrect redistribution, but in both directions.
+
+		Contrary to all other categories, thread block merging and thread merging have to be considered separately, since thread block merging does not normally change the number of threads, while thread merging is halved.
+		
+		If thread block merging is applied incorrectly, larger thread blocks are created. Now twice as many threads share the same shared memory. As long as this memory is not exhausted and all other limitations, such as the maximum number of threads per block and the maximum number of threads per SM, there are no negative effects. When these limits are reached, more accesses to the global memory are required because the shared memory, as soon as it is full, moves to the global memory. In addition, if the thread limit is reached, fewer threads are executed per block \cite{torres2011understanding}.
+		
+		If thread merging is incorrectly applied, the number of threads will be halved. This doubles the computing time \cite{torres2011understanding}. 
+
+	
 	
 \section{Related Work}
 
-	Yi Yang et. al. wrote a paper on "A GPGPU Compiler for Memory Optimization Parallelism Management" which explains how to implement the optimizations presented in this paper. Further optimizations are also presented and these optimizations are tested using examples such as matrix multiplication with large matrices \cite{GPGPUCompiler}.
+	Yi Yang et. al. wrote a paper on "A GPGPU Compiler for Memory Optimization Parallelism Management" which explains how to implement the optimizations presented in this paper. Further optimizations are also presented and these optimizations are tested using examples such as matrix multiplication with large matrices \cite{yang2010gpgpu}.
 	
-	Ashwin M. Aji et al. wrote an article on "Bounding the Effect of Partition Camping in GPU Kernels", which explains the effect of Partition Camping in more detail. It also explains the different patterns that can be used to avoid partition camping, which have been omitted in this paper for reasons of simplicity \cite{pc}.  
+	Ashwin M. Aji et al. wrote an article on "Bounding the Effect of Partition Camping in GPU Kernels", which explains the effect of Partition Camping in more detail. It also explains the different patterns that can be used to avoid partition camping, which have been omitted in this paper for reasons of simplicity \cite{aji2011bounding}.  
 	
-	This paper optimizes access to shared storage areas.  Greg Ruetsch et. al. from NVIDIA have carried out several optimizations using the example of matrix multiplication. An optimization was that the data is stored in such a way that no conflicts occur, which is a further development and/or modification of the partition camping solution \cite{mtransnvidia}.
+	This paper optimizes access to shared storage areas.  Greg Ruetsch et. al. from NVIDIA have carried out several optimizations using the example of matrix multiplication. An optimization was that the data is stored in such a way that no conflicts occur, which is a further development and/or modification of the partition camping solution \cite{ruetsch2009optimizing}.
 	
 \section{Conclusion}
+
+	In summary, there are many different optimizations for GPGPU compilers. The four comparative optimizations range from general to specific and from little to a lot of effort. Simple optimizations, such as data prefetching, often have a positive effect on the execution time. More complex optimizations such as thread and thread block merging are rarely used, but make a big difference in execution time.  In the future, further optimizations according to these and other categories should be compared, so that different compilers can implement different optimizations in order to offer the user the best possible binary. Finally, simple and/or small optimizations also reduce the execution time and thus save costs and time.
 	
 
-\begin{thebibliography}{00}
-\bibitem{nvc} CUDA Zone - https://developer.nvidia.com/cuda-zone
-\bibitem{GPGPUCompiler} Yi Yang, Ping Xiang, Jingfei Kong, Huiyang Zhou, "A GPGPU Compiler for Memory Optimization and Parallelism Management", 2010
-\bibitem{myth} Victor W Lee, Changkyu Kim, Jatin Chhugani et. al "Debunking the 100X GPU vs. CPU Myth: An Evaluation of Throughput Computing on CPU and GPU", 2010
-\bibitem{1080gtx} NVIDIA GeForce GTX 1080, https://www.nvidia.com/en-us/geforce/products/10series/geforce-gtx-1080/
-\bibitem{1080gtxdepth} NVIDIA GeForce GTX 1080 White Paper,
-https://international.download.nvidia.com/geforce-com/international/pdfs/GeForce\_GTX\_1080\_Whitepaper\_FINAL.pdf
-\bibitem{cudacpp} GPU Accelerated Computing with C and C++ - https://developer.nvidia.com/how-to-cuda-c-cpp
-\bibitem{cudap} Programming Model - Kernel http://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html\#kernels
-\bibitem{cudalite} Sain-Zee Ueng, Melvin Lathara, Sara S. Baghsorkhi, Wen-mei W. Hwu, "CUDA-Lite: Reducing GPU Programming", 2008
-Complexity
-\bibitem{accsql} Peter Bakkum, Kevin Skadron, "Accelerating SQL Database Operations on a GPU with CUDA", 2010
-\bibitem{pc} Ashwin M. Aji, Mayank Daga, Wu-chun Feng, "Bounding the Effect of Partition Camping in GPU Kernels", 2011
-\bibitem{mtransnvidia} Greg Ruetsch, Paulius Micikevicius, "Optimizing Matrix Transpose in CUDA", 2009 
-\bibitem{gccoptimizations} GCC Optimize Options - https://gcc.gnu.org/onlinedocs/gcc/Optimize-Options.html
-\bibitem{threadDefinition}  Lamport, Leslie (September 1979). "How to Make a Multiprocessor Computer That Correctly Executes Multiprocess Programs" (PDF). IEEE Transactions on Computers. C–28 (9): 690–691. doi:10.1109/tc.1979.1675439.
+
+\bibliographystyle{IEEEtran}
+\bibliography{Paper}
 
 
-
-\end{thebibliography}
 
 \end{document}
 
