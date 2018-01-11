@@ -399,25 +399,25 @@ GPU Compiler Optimizations
 	
 		All previous work does not contain any information about the error case. An error case is characterized by an applied optimization which slows down the program execution or raises the global memory access.
 		
-		Data prefetching is relatively simple to use in the application and performs only one additional load operation, which copies memory from the global memory to the local memory. If data is loaded at this point that is no longer needed, the access times to the global memory for other threads increase unnecessarily, but the execution of the current thread is slowed down only marginally, since the load operation is executed in parallel and does not block the process flow of the thread as long as the data is not required.
+		Data prefetching is relatively simple to use in the application and performs only one additional load operation, which copies memory from the global memory to the local memory. If data is loaded at this point that is no longer needed, the access times to the global memory for other threads increase unnecessarily. Additionally the execution of the current thread is only slowed down marginally, since the load operation is executed in parallel and does not block the process flow of the thread as long as the data is not required.
 		
 		The redistribution of data during the elimination of partition camping has more problems if used incorrectly. Two variants must be considered.
-		In extreme cases, where all data is correct, the performance gain can be reversed if the data is redistributed. 
+		In extreme cases, where all data is placed correctly, the performance gain can be reversed if the data is redistributed. 
 		In a mixed case, where some data is stored unfavourably, it can lead to slight performance changes due to incorrect redistribution, but in both directions.
 
-		Contrary to all other categories, thread block merging and thread merging have to be considered separately, since thread block merging does not normally change the number of threads, while thread merging is halved.
+		Contrary to all other categories, thread block merging and thread merging have to be considered separately, since thread block merging does not normally change the number of threads, while thread merging may decrease parallelism.
 		
 		If thread block merging is applied incorrectly, larger thread blocks are created. Now twice as many threads share the same shared memory. As long as this memory is not exhausted and all other limitations, such as the maximum number of threads per block and the maximum number of threads per SM, there are no negative effects. When these limits are reached, more accesses to the global memory are required because the shared memory, as soon as it is full, moves to the global memory. In addition, if the thread limit is reached, fewer threads are executed per block \cite{torres2011understanding}.
 		
-		If thread merging is incorrectly applied, the number of threads will be halved. This doubles the computing time \cite{torres2011understanding}. 
+		If thread merging is incorrectly applied, the number of threads will be decreased. The factor depends on how many thread blocks are merged. This doubles the computing time \cite{torres2011understanding}. 
 
 	
 	
 \section{Related Work}
 
-	Yi Yang et. al. wrote a paper on "A GPGPU Compiler for Memory Optimization Parallelism Management" which explains how to implement the optimizations presented in this paper. Further optimizations are also presented and these optimizations are tested using examples such as matrix multiplication with large matrices \cite{yang2010gpgpu}.
+	Yang et. al. explains how to implement the optimizations presented in this paper. Further optimizations are also presented and these optimizations are tested using examples such as matrix multiplication with large matrices \cite{yang2010gpgpu}.
 	
-	Ashwin M. Aji et al. wrote an article on "Bounding the Effect of Partition Camping in GPU Kernels", which explains the effect of Partition Camping in more detail. It also explains the different patterns that can be used to avoid partition camping, which have been omitted in this paper for reasons of simplicity \cite{aji2011bounding}.  
+	Aji et al. explains the effect of Partition Camping in more detail. It also explains the different patterns that can be used to avoid partition camping, which have been omitted in this paper for reasons of simplicity \cite{aji2011bounding}.  
 	
 	This paper optimizes access to shared storage areas.  Greg Ruetsch et. al. from NVIDIA have carried out several optimizations using the example of matrix multiplication. An optimization was that the data is stored in such a way that no conflicts occur, which is a further development and/or modification of the partition camping solution \cite{ruetsch2009optimizing}.
 	
